@@ -10,7 +10,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped<IAsistenciaService, AsistenciaService>();
 builder.Services.AddScoped<ICargoService, CargoService>();
-
+builder.Services.AddScoped<IContratoService, ContratoService>();
+builder.Services.AddScoped<IDepartamentoService, DepartamentoService>();
+builder.Services.AddScoped<IEmpleadoService, EmpleadoService>();
+builder.Services.AddScoped<IEvaluacionDesempenoService, EvaluacionDesempenoService>();
+builder.Services.AddScoped<INominaService, NominaService>();
+builder.Services.AddScoped<IPermisoService, PermisoService>();
 builder.Services.AddControllers();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
