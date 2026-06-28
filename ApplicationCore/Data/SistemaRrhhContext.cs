@@ -32,10 +32,6 @@ public partial class SistemaRrhhContext : DbContext
 
     public virtual DbSet<Permiso> Permisos { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=DESKTOP-3I9IP22\\SQLEXPRESS;Database=SistemaRRHH;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=true");
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Asistencia>(entity =>
@@ -158,7 +154,10 @@ public partial class SistemaRrhhContext : DbContext
                 .HasMaxLength(20)
                 .IsUnicode(false)
                 .HasDefaultValue("Pendiente");
-            entity.Property(e => e.FechaSolicitud).HasDefaultValueSql("(getdate())");
+
+            // ¡AQUÍ ESTABA EL GETDATE() QUE HACÍA FALLAR A POSTGRES!
+            entity.Property(e => e.FechaSolicitud).HasDefaultValueSql("now()");
+
             entity.Property(e => e.Motivo).HasMaxLength(255);
 
             entity.HasOne(d => d.Empleado).WithMany(p => p.Permisos)
