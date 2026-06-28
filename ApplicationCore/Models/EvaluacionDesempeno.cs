@@ -15,5 +15,5 @@ public partial class EvaluacionDesempeno
 
     public string? Comentarios { get; set; }
 
-    public virtual Empleado Empleado { get; set; } = null!;
+    public virtual Empleado? Empleado { get; set; } = null!;
 }

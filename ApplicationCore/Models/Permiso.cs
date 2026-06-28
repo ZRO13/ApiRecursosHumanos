@@ -17,5 +17,5 @@ public partial class Permiso
 
     public string? Estado { get; set; }
 
-    public virtual Empleado Empleado { get; set; } = null!;
+    public virtual Empleado? Empleado { get; set; } = null!;
 }

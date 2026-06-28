@@ -17,5 +17,5 @@ public partial class Contrato
 
     public string Estado { get; set; } = null!;
 
-    public virtual Empleado Empleado { get; set; } = null!;
+    public virtual Empleado? Empleado { get; set; } = null!;
 }

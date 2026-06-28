@@ -15,5 +15,5 @@ public partial class Asistencia
 
     public TimeOnly? HoraSalida { get; set; }
 
-    public virtual Empleado Empleado { get; set; } = null!;
+    public virtual Empleado? Empleado { get; set; } = null!;
 }

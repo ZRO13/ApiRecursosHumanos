@@ -21,11 +21,11 @@ public partial class Empleado
 
     public virtual ICollection<Asistencia> Asistencia { get; set; } = new List<Asistencia>();
 
-    public virtual Cargo Cargo { get; set; } = null!;
+    public virtual Cargo? Cargo { get; set; } = null!;
 
     public virtual ICollection<Contrato> Contratos { get; set; } = new List<Contrato>();
 
-    public virtual Departamento Departamento { get; set; } = null!;
+    public virtual Departamento? Departamento { get; set; } = null!;
 
     public virtual ICollection<EvaluacionDesempeno> EvaluacionDesempenos { get; set; } = new List<EvaluacionDesempeno>();
 

@@ -15,5 +15,5 @@ public partial class Nomina
 
     public decimal Deducciones { get; set; }
 
-    public virtual Empleado Empleado { get; set; } = null!;
+    public virtual Empleado? Empleado { get; set; } = null!;
 }
