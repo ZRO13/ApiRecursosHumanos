@@ -40,7 +40,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowWebApp", policy =>
     {
-        policy.WithOrigins("https://rrhh1-app.vercel.app/")
+        policy.WithOrigins("https://rrhh1-app.vercel.app")
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
