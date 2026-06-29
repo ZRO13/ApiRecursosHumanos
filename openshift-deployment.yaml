@@ -1,0 +1,64 @@
+---
+# 1. El Deployment (El contenedor de la API)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sistemarrhh-api
+  labels:
+    app: sistemarrhh
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sistemarrhh
+  template:
+    metadata:
+      labels:
+        app: sistemarrhh
+    spec:
+      containers:
+      - name: api
+        # OpenShift reemplazará esto si usas un ImageStream, 
+        # o puedes poner la URL de tu imagen en Docker Hub/Registro
+        image: tu-registro/sistemarrhh-api:latest 
+        ports:
+        - containerPort: 8080
+        env:
+        # Aquí puedes inyectar tus variables de entorno, como la cadena de conexión de NeonDB
+        - name: ConnectionStrings__ConexionSql
+          value: "Host=ep-flat-cake-atk4lb8o-pooler.c-9.us-east-1.aws.neon.tech;Database=neondb;Username=neondb_owner;Password=npg_a8RtW3OcshFL;Ssl Mode=Require;Channel Binding=Require;"
+        - name: ASPNETCORE_ENVIRONMENT
+          value: "Production"
+
+---
+# 2. El Service (Red interna)
+apiVersion: v1
+kind: Service
+metadata:
+  name: sistemarrhh-service
+  labels:
+    app: sistemarrhh
+spec:
+  ports:
+  - port: 8080
+    targetPort: 8080
+    protocol: TCP
+  selector:
+    app: sistemarrhh
+
+---
+# 3. El Route (Acceso desde Internet)
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: sistemarrhh-route
+  labels:
+    app: sistemarrhh
+spec:
+  to:
+    kind: Service
+    name: sistemarrhh-service
+  port:
+    targetPort: 8080
+  tls:
+    termination: edge # Habilita HTTPS automáticamente

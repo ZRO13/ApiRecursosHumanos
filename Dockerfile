@@ -1,29 +1,37 @@
-# 1. Etapa de compilación
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-WORKDIR /src
-
-# Copiar la solución y los archivos de proyecto respetando la estructura
-COPY ["SistemaRRHH.API.sln", "./"]
-COPY ["ApplicationCore/ApplicationCore.csproj", "ApplicationCore/"]
-COPY ["Presentation/Presentation.csproj", "Presentation/"]
-
-# Restaurar dependencias a nivel de solución
-RUN dotnet restore "SistemaRRHH.API.sln"
-
-# Copiar el resto del código fuente
-COPY . .
-
-# Moverse a la carpeta del proyecto principal (API) y publicarlo
-WORKDIR "/src/Presentation"
-RUN dotnet publish "Presentation.csproj" -c Release -o /app/publish /p:UseAppHost=false
-
-# 2. Etapa de ejecución
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
+# 1. Fase base para ejecución en OpenShift
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+# OpenShift requiere que la app no corra como root por seguridad
+USER $APP_UID 
 WORKDIR /app
-COPY --from=build /app/publish .
-
-# Exponer el puerto por defecto de .NET 8
 EXPOSE 8080
 
-# Iniciar la aplicación (Verifica que tu proyecto principal se llame Presentation)
+# 2. Fase de compilación
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+ARG BUILD_CONFIGURATION=Release
+WORKDIR /src
+
+# Copiar el archivo de la solución y las definiciones de los proyectos
+COPY ["SistemaRRHH.API.sln", "./"]
+COPY ["Presentation/Presentation.csproj", "Presentation/"]
+COPY ["ApplicationCore/ApplicationCore.csproj", "ApplicationCore/"]
+
+# Restaurar dependencias a nivel global usando la solución
+RUN dotnet restore "SistemaRRHH.API.sln"
+
+# Copiar el resto del código fuente a la imagen
+COPY . .
+WORKDIR "/src/Presentation"
+
+# Compilar
+RUN dotnet build "./Presentation.csproj" -c $BUILD_CONFIGURATION -o /app/build
+
+# 3. Fase de publicación
+FROM build AS publish
+ARG BUILD_CONFIGURATION=Release
+RUN dotnet publish "./Presentation.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+
+# 4. Fase final (Imagen ligera solo con los binarios)
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "Presentation.dll"]
