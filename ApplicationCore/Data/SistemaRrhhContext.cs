@@ -31,7 +31,7 @@ public partial class SistemaRrhhContext : DbContext
     public virtual DbSet<Nomina> Nominas { get; set; }
 
     public virtual DbSet<Permiso> Permisos { get; set; }
-
+ 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Asistencia>(entity =>
@@ -155,7 +155,6 @@ public partial class SistemaRrhhContext : DbContext
                 .IsUnicode(false)
                 .HasDefaultValue("Pendiente");
 
-            // ¡AQUÍ ESTABA EL GETDATE() QUE HACÍA FALLAR A POSTGRES!
             entity.Property(e => e.FechaSolicitud).HasDefaultValueSql("now()");
 
             entity.Property(e => e.Motivo).HasMaxLength(255);

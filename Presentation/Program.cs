@@ -25,9 +25,15 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 //builder.Services.AddDbContext<SistemaRrhhContext>(options =>
-//    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+////    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+//builder.Services.AddDbContext<SistemaRrhhContext>(options =>
+//    options.UseNpgsql(builder.Configuration.GetConnectionString("ConexionSql")));
+// Modifica tu Program.cs solo para que corra la migración
+//builder.Services.AddDbContext<SistemaRrhhContext>(options =>
+//    options.UseNpgsql("Host=ep-flat-cake-atk4lb8o-pooler.c-9.us-east-1.aws.neon.tech;Database=neondb;Username=neondb_owner;Password=npg_a8RtW3OcshFL;Ssl Mode=Require;Trust Server Certificate=true;"));
 builder.Services.AddDbContext<SistemaRrhhContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("ConexionSql")));
+    options.UseNpgsql(
+        builder.Configuration.GetConnectionString("ConexionSql")));
 
 // Configuración de CORS
 builder.Services.AddCors(options =>
@@ -57,4 +63,4 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.Run();
+app.Run(); 
