@@ -28,19 +28,19 @@ builder.Services.AddSwaggerGen();
 ////    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 //builder.Services.AddDbContext<SistemaRrhhContext>(options =>
 //    options.UseNpgsql(builder.Configuration.GetConnectionString("ConexionSql")));
-// Modifica tu Program.cs solo para que corra la migración
+// Modifica tu Program.cs solo para que corra la migraciÃ³n
 //builder.Services.AddDbContext<SistemaRrhhContext>(options =>
 //    options.UseNpgsql("Host=ep-flat-cake-atk4lb8o-pooler.c-9.us-east-1.aws.neon.tech;Database=neondb;Username=neondb_owner;Password=npg_a8RtW3OcshFL;Ssl Mode=Require;Trust Server Certificate=true;"));
 builder.Services.AddDbContext<SistemaRrhhContext>(options =>
     options.UseNpgsql(
         builder.Configuration.GetConnectionString("ConexionSql")));
 
-// Configuración de CORS
+// ConfiguraciÃ³n de CORS
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("FrontendPolicy", policy =>
+    options.AddPolicy("AllowWebApp", policy =>
     {
-        policy.WithOrigins("http://localhost:8080")
+        policy.WithOrigins("https://rrhh1-app.vercel.app/")
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
@@ -57,7 +57,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 // Habilitar CORS (antes de Authorization y MapControllers)
-app.UseCors("FrontendPolicy");
+app.UseCors("AllowWebApp");
 
 app.UseAuthorization();
 
